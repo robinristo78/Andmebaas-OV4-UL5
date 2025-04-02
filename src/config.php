@@ -1,6 +1,6 @@
 <?php
 // Basic connection settings
-$databaseHost = '<host_address>';
+$databaseHost = 'ita.voc';
 $databaseUsername = '<user_name>';
 $databasePassword = '******';
 $databaseName = 'rolodex';
