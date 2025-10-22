@@ -1,80 +1,67 @@
 <?php
-// Include database connection file
-include_once("config.php");
+include 'config.php';
 
-if(isset($_POST['update']))
-{	
-	// Retrieve record values
-	$name = mysqli_real_escape_string($mysqli, $_POST['name']);
-	$age = mysqli_real_escape_string($mysqli, $_POST['age']);
-	$email = mysqli_real_escape_string($mysqli, $_POST['email']);	
+if (isset($_POST['submit'])) {
+    $nimi = $_POST['Nimi'];
+    $sugu = $_POST['sugu'];
+    $pikkus = $_POST['pikkus'];
+    $kaal = $_POST['kaal'];
+    $synniaeg = $_POST['synniaeg'];
 
-	$nameErr = $ageErr = $emailErr = "";
-	
-	// Check for empty fields
-	if(empty($name) || empty($age) || empty($email)) {	
-		if(empty($name)) {
-			$nameErr = "* required";
-		}
-		if(empty($age)) {
-			$ageErr = "* required";
-		}
-		if(empty($email)) {
-			$emailErr = "* required";
-		}		
-	} else {	
-		// Insert new contact
-		$stmt = $mysqli->prepare("INSERT INTO contacts (name,age,email) VALUES(?, ?, ?)");
-		$stmt->bind_param("sis", $name, $age, $email);
-		$stmt->execute();
+    $sql = "INSERT INTO Isikud (Nimi, sugu, pikkus, kaal, synniaeg)
+            VALUES ('$nimi', '$sugu', '$pikkus', '$kaal', '$synniaeg')";
 
-		// Redirect to home page (index.php)
-		header("Location: index.php");
-	}
-}
-else if (isset($_POST['cancel'])) {
-	// Redirect to home page (index.php)
-	header("Location: index.php");
+    if ($mysqli->query($sql)) {
+        header("Location: index.php");
+        exit();
+    } else {
+        echo "Error: " . $mysqli->error;
+    }
 }
 ?>
+
+<!DOCTYPE html>
 <html>
-<head>	
-	<title>Edit Contact</title>
-	<link rel="stylesheet" href="styles.css" />
+<head>
+  <title>Lisa isik</title>
 </head>
 <body>
-	<form name="form1" method="post" action="add.php">
-		<table>
-			<tr> 
-				<td>Name</td>
-				<td>
-					<input type="text" name="name" value="<?php echo $name;?>">
-					<span class="error"><?php echo $nameErr;?></span>
-				</td>
-			</tr>
-			<tr> 
-				<td>Age</td>
-				<td>
-					<input type="text" name="age" value="<?php echo $age;?>">
-					<span class="error"><?php echo $ageErr;?></span>
-				</td>
-			</tr>
-			<tr> 
-				<td>Email</td>
-				<td>
-					<input type="text" name="email" value="<?php echo $email;?>">
-					<span class="error"><?php echo $emailErr;?></span>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input class="cancel" type="submit" name="cancel" value="Cancel">
-				</td>
-				<td>
-					<input type="submit" name="update" value="Update">
-				</td>
-			</tr>
-		</table>
-	</form>
+<h1>Lisa uus isik</h1>
+<form method="post">
+  <table>
+    <tr>
+      <td>Nimi:</td>
+      <td><input type="text" name="Nimi" required></td>
+    </tr>
+    <tr>
+      <td>Sugu:</td>
+      <td>
+        <select name="sugu">
+          <option value="M">M</option>
+          <option value="N">N</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Pikkus:</td>
+      <td><input type="number" name="pikkus" required></td>
+    </tr>
+    <tr>
+      <td>Kaal:</td>
+      <td><input type="number" name="kaal" required></td>
+    </tr>
+    <tr>
+      <td>Sünniaeg:</td>
+      <td><input type="date" name="synniaeg" required></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align:center;">
+        <input type="submit" name="submit" value="Lisa" class="button">
+        <a class="button" href="index.php">Tagasi</a>
+      </td>
+    </tr>
+  </table>
+</form>
+<a href="index.php">Tagasi</a>
 </body>
 </html>

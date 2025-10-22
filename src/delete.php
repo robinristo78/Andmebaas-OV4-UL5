@@ -1,15 +1,11 @@
 <?php
-// Include database connection file
-include("config.php");
+include 'config.php';
 
-// Retrieve [id] value from querystring parameter
-$id = $_GET['id'];
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $mysqli->query("DELETE FROM Isikud WHERE Isiku_id=$id");
+}
 
-// Delete row for a specified id
-$stmt = $mysqli->prepare("DELETE FROM contacts WHERE id=?");
-$stmt->bind_param("i", $id);
-$stmt->execute();
-
-// Redirect to home page (index.php)
-header("Location:index.php");
+header("Location: index.php");
+exit();
 ?>
